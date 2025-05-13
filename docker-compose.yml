@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: D0ga00g123@
+      MYSQL_DATABASE: atudw
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+
+  spring-app:
+    image: openjdk:17-jdk-slim
+    container_name: spring-container
+    depends_on:
+      - mysql-db
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/atudw
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: D0ga00g123@
+      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: loc.pakirat.tech@gmail.com
+      SPRING_MAIL_PASSWORD: tmazpciuaxzpqkcw
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+    volumes:
+      - ./target:/app
+    working_dir: /app
+    command: java -jar your-spring-boot-app.jar
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
