@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Path Traversal - Common Paths</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4" th:text="${title}">Path Traversal - Common Paths</h1>
+        
+        <div class="alert alert-danger">
+            <strong>Warning:</strong> This page lists common paths that can be accessed via path traversal vulnerabilities.
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">Application Files</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Path</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>pom.xml</code></td>
+                                    <td>Maven Project Configuration</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='pom.xml')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>src/main/resources/application.properties</code></td>
+                                    <td>Application Configuration</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='src/main/resources/application.properties')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>src/main/java/com/atudw/demo/controller/pathtraversal/PathTraversalController.java</code></td>
+                                    <td>Path Traversal Controller</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='src/main/java/com/atudw/demo/controller/pathtraversal/PathTraversalController.java')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>src/main/java/com/atudw/demo/controller/fileupload/FileUploadController.java</code></td>
+                                    <td>File Upload Controller</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='src/main/java/com/atudw/demo/controller/fileupload/FileUploadController.java')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">Uploaded Files</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Path</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>uploads/shell.jsp</code></td>
+                                    <td>JSP Web Shell</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='uploads/shell.jsp')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>uploads/shell-path-traversal.jsp</code></td>
+                                    <td>Path Traversal Shell</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='uploads/shell-path-traversal.jsp')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>uploads/path-traversal-exploit.jsp</code></td>
+                                    <td>Path Traversal Exploit</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='uploads/path-traversal-exploit.jsp')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-3">
+                            <a th:href="@{/pathtraversal/browse(dir='uploads')}" class="btn btn-outline-primary">Browse All Uploads</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">Windows System Files</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Path</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>C:/Windows/win.ini</code></td>
+                                    <td>Windows Initialization File</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='C:/Windows/win.ini')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>C:/Windows/System32/drivers/etc/hosts</code></td>
+                                    <td>Hosts File</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='C:/Windows/System32/drivers/etc/hosts')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>C:/Windows/System32/config/SAM</code></td>
+                                    <td>Security Accounts Manager (may require privileges)</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='C:/Windows/System32/config/SAM')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">Linux System Files</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Path</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/etc/passwd</code></td>
+                                    <td>User Account Information</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='/etc/passwd')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/etc/shadow</code></td>
+                                    <td>Password Hashes (requires privileges)</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='/etc/shadow')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/etc/hosts</code></td>
+                                    <td>Hosts File</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='/etc/hosts')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>/proc/self/environ</code></td>
+                                    <td>Process Environment Variables</td>
+                                    <td><a th:href="@{/pathtraversal/readfile(file='/proc/self/environ')}" class="btn btn-sm btn-danger">View</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Path Traversal Prevention</h5>
+            </div>
+            <div class="card-body">
+                <p>To prevent path traversal vulnerabilities, implement the following security measures:</p>
+                <ul>
+                    <li><strong>Input Validation:</strong> Validate and sanitize user input to ensure it doesn't contain path traversal sequences.</li>
+                    <li><strong>Use Safe APIs:</strong> Use APIs that don't resolve path traversal sequences.</li>
+                    <li><strong>Canonicalize Paths:</strong> Resolve paths to their canonical form before validation.</li>
+                    <li><strong>Whitelist Approach:</strong> Only allow access to specific, predefined files or directories.</li>
+                    <li><strong>Sandboxing:</strong> Restrict file operations to a specific directory.</li>
+                    <li><strong>Proper Permissions:</strong> Run your application with the least privileges necessary.</li>
+                    <li><strong>Web Application Firewall:</strong> Use a WAF to filter out malicious requests.</li>
+                </ul>
+                
+                <h6 class="mt-3">Secure Code Example:</h6>
+                <pre class="bg-light p-3 rounded">
+// Restrict to a specific directory
+Path basePath = Paths.get("uploads").toAbsolutePath().normalize();
+Path requestedPath = Paths.get(userInput).normalize();
+Path resolvedPath = basePath.resolve(requestedPath).normalize();
+
+// Check if the resolved path is within the base directory
+if (!resolvedPath.startsWith(basePath)) {
+    throw new SecurityException("Path traversal attempt detected");
+}
+
+// Now it's safe to use the resolvedPath
+                </pre>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a th:href="@{/pathtraversal}" class="btn btn-outline-secondary">Back to Path Traversal Demo</a>
+        </div>
+    </div>
+</body>
+</html> 

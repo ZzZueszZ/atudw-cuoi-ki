@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trình Xem Tệp - Demo Path Traversal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 4.5rem; } /* Để không bị che bởi header cố định */
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: pageHeader}"></div>
+
+    <div class="container mt-4">
+        <h1>Trình Xem Tệp</h1>
+        
+        <div class="alert"
+             th:classappend="${isVulnerable} ? 'alert-danger' : 'alert-success'"
+             th:if="${isVulnerable != null}">
+            <strong th:text="${isVulnerable} ? 'Triển khai có lỗ hổng' : 'Triển khai an toàn'"></strong>
+        </div>
+        
+        <div class="alert alert-danger" th:if="${error != null}">
+            <strong>Lỗi:</strong> <span th:text="${error}"></span>
+        </div>
+        
+        <div class="card mb-4" th:if="${fileContent != null}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <span>Tệp:</span>
+                    <span th:text="${fileName}" class="fw-bold"></span>
+                </h5>
+                <div>
+                    <a th:href="@{/pathtraversal}" class="btn btn-sm btn-outline-secondary">Quay lại Danh sách</a>
+                    <a th:if="${isVulnerable}" 
+                       th:href="@{'/pathtraversal/unsafe/download?file=' + ${fileName}}" 
+                       class="btn btn-sm btn-danger ms-2">Tải xuống (Không an toàn)</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <pre class="bg-light p-3" style="white-space: pre-wrap;" th:text="${fileContent}"></pre>
+            </div>
+        </div>
+        
+        <div th:if="${error == null && fileContent == null}" class="alert alert-info">
+            Không có nội dung tệp để hiển thị hoặc tệp không tồn tại.
+        </div>
+        
+        <div class="mt-4">
+            <h3>Thông tin về Path Traversal</h3>
+            <div class="mb-3">
+                <p>Lỗ hổng Path Traversal cho phép kẻ tấn công truy cập các tệp và thư mục được lưu trữ bên ngoài thư mục dự kiến bằng cách thao túng các biến tham chiếu đến tệp với chuỗi "../" và các kỹ thuật tương tự.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card border-danger mb-3">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">Triển khai có lỗ hổng</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Chấp nhận tham số tên tệp mà không kiểm tra hợp lệ:</p>
+                            <pre class="bg-light p-2">
+Path filePath = uploadsBaseDir.resolve("unsafe").resolve(fileName);
+// Không kiểm tra fileName
+// Không chuẩn hóa đường dẫn</pre>
+                            <p>Điều này cho phép kẻ tấn công sử dụng kỹ thuật Path Traversal để truy cập tệp ngoài thư mục đích.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-success mb-3">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Triển khai an toàn</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Kiểm tra tên tệp và đường dẫn đã chuẩn hóa:</p>
+                            <pre class="bg-light p-2">
+// Kiểm tra ký tự traversal
+if (fileName.contains("..") || fileName.contains("/")) {
+    return "Tên tệp không hợp lệ";
+}
+
+// Chuẩn hóa và kiểm tra nằm trong thư mục cho phép
+Path normalizedPath = filePath.normalize();
+if (!normalizedPath.startsWith(allowedDir)) {
+    return "Truy cập bị từ chối";
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a th:href="@{/pathtraversal}" class="btn btn-primary">Quay lại Demo Path Traversal</a>
+                <a th:href="@{/}" class="btn btn-secondary ms-2">Quay lại Trang chủ</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

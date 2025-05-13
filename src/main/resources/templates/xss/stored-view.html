@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Xem Tin Nhắn Stored XSS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 4.5rem; } /* Để không bị che bởi header cố định */
+        .message-text {
+            white-space: pre-wrap; /* Giữ nguyên khoảng trắng và xuống dòng */
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: pageHeader}"></div>
+
+    <div class="container mt-4">
+        <h1 th:text="${title}">Xem Tin Nhắn - Stored XSS</h1>
+
+        <div class="alert" th:classappend="${isVulnerable} ? 'alert-danger' : 'alert-success'">
+            <strong th:text="${isVulnerable} ? 'Các tin nhắn này có thể chứa mã độc (Stored XSS)' : 'Các tin nhắn này đã được làm sạch (An Toàn)'"></strong>
+        </div>
+
+        <div th:if="${messages.isEmpty()}" class="alert alert-info mt-3">
+            Không có tin nhắn nào để hiển thị.
+        </div>
+
+        <div th:unless="${messages.isEmpty()}" class="list-group mt-3">
+            <div th:each="msg : ${messages}" class="list-group-item">
+                <div class="message-text">
+                    <div th:if="${isVulnerable}" th:utext="${msg}"></div> <!-- Lỗ hổng: dùng th:utext -->
+                    <div th:unless="${isVulnerable}" th:text="${msg}"></div> <!-- An toàn: dùng th:text -->
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div>
+            <a th:href="@{${isVulnerable} ? '/xss/stored/form' : '/xss/stored-safe/form'}" class="btn btn-primary">Gửi Tin Nhắn Mới</a>
+            <a th:href="@{/}" class="btn btn-secondary ms-2">Quay lại Trang chủ</a>
+        </div>
+
+        <div class="mt-4">
+            <p th:if="${isVulnerable}">
+                <strong>Trong phiên bản không an toàn:</strong> Tin nhắn được hiển thị bằng <code>th:utext</code>. Nếu một tin nhắn chứa <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>, mã JavaScript sẽ được thực thi khi trang này được tải.
+            </p>
+            <p th:unless="${isVulnerable}">
+                <strong>Trong phiên bản an toàn:</strong> Tin nhắn được hiển thị bằng <code>th:text</code> (mặc định nếu tin nhắn được làm sạch trước khi lưu) hoặc đã được làm sạch trước khi lưu. Mã HTML và JavaScript sẽ được hiển thị dưới dạng văn bản thuần túy, không được thực thi.
+            </p>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

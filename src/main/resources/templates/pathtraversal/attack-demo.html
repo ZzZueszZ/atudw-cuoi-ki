@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Path Traversal - Attack Demonstration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4" th:text="${title}">Path Traversal - Attack Demonstration</h1>
+        
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">Security Warning</h4>
+            <p>This is a demonstration of a real-world path traversal attack scenario. This shows how an attacker can chain multiple vulnerabilities to gain remote code execution on a server.</p>
+            <p class="mb-0"><strong>Warning:</strong> These techniques should never be used against real systems without explicit permission.</p>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Attack Scenario: Creating and Using a Web Shell</h5>
+            </div>
+            <div class="card-body">
+                <p>This demonstration shows how an attacker can use path traversal vulnerabilities to:</p>
+                <ol>
+                    <li>Create a malicious JSP web shell in the application's web-accessible directory</li>
+                    <li>Access the web shell to execute arbitrary commands on the server</li>
+                </ol>
+                
+                <div class="mt-4">
+                    <h5>Step 1: Create a JSP Web Shell</h5>
+                    <p>First, the attacker creates a JSP file that can execute system commands.</p>
+                    
+                    <div th:if="${step1Success}" class="alert alert-success">
+                        <strong>Success!</strong> Web shell created at <span th:text="${webShellPath}">path</span>
+                    </div>
+                    
+                    <div th:if="${step1Error}" class="alert alert-danger">
+                        <strong>Error:</strong> <span th:text="${step1Error}">error message</span>
+                    </div>
+                    
+                    <div th:if="${!webShellExists}">
+                        <form th:action="@{/pathtraversal/attack-demo/step1}" method="post">
+                            <button type="submit" class="btn btn-danger">Create Web Shell</button>
+                        </form>
+                    </div>
+                    
+                    <div th:if="${webShellExists}" class="alert alert-info mt-3">
+                        <p><strong>Web shell already exists!</strong> You can access it directly.</p>
+                        <a href="/uploads/webshell.jsp" target="_blank" class="btn btn-outline-dark">Access Web Shell</a>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Step 2: Execute Commands Through the Web Shell</h5>
+                    <p>Once the web shell is deployed, the attacker can execute arbitrary commands on the server.</p>
+                    <p>Try these commands in the web shell:</p>
+                    <ul>
+                        <li><code>whoami</code> - Show current user</li>
+                        <li><code>hostname</code> - Show server hostname</li>
+                        <li><code>dir</code> (Windows) or <code>ls -la</code> (Linux) - List files</li>
+                        <li><code>systeminfo</code> (Windows) or <code>uname -a</code> (Linux) - Show system information</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Other Attack Vectors</h5>
+                    <p>Path traversal vulnerabilities can also be used for:</p>
+                    <ul>
+                        <li>Reading sensitive configuration files to extract credentials</li>
+                        <li>Writing malicious files to autostart directories</li>
+                        <li>Modifying system configuration files</li>
+                        <li>Creating backdoors for persistent access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Prevention Measures</h5>
+            </div>
+            <div class="card-body">
+                <p>To prevent path traversal vulnerabilities:</p>
+                <ul>
+                    <li><strong>Input Validation:</strong> Validate and sanitize all user inputs that could be used in file operations</li>
+                    <li><strong>Path Canonicalization:</strong> Resolve paths to their canonical form before validation</li>
+                    <li><strong>Access Controls:</strong> Implement proper file system permissions and run with least privilege</li>
+                    <li><strong>Whitelisting:</strong> Use a whitelist of allowed files or directories rather than trying to block malicious input</li>
+                    <li><strong>Web Application Firewall:</strong> Implement a WAF to detect and block path traversal attempts</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a th:href="@{/pathtraversal}" class="btn btn-outline-secondary">Back to Path Traversal Demo</a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Path Traversal Vulnerability Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 th:text="${title}">Path Traversal Vulnerability</h1>
+        <div class="alert alert-danger">
+            <p th:text="${description}">This form allows uploading files to arbitrary locations via path traversal.</p>
+            <p><strong>Warning:</strong> This is a demonstration of a security vulnerability. In a real environment, this could be used to overwrite system files.</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">Path Traversal Attack Examples</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Path Input</th>
+                            <th>Description</th>
+                            <th>Potential Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>../</code></td>
+                            <td>Move up one directory</td>
+                            <td>Access parent directories</td>
+                        </tr>
+                        <tr>
+                            <td><code>../../</code></td>
+                            <td>Move up two directories</td>
+                            <td>Access grandparent directories</td>
+                        </tr>
+                        <tr>
+                            <td><code>../../../etc</code></td>
+                            <td>Access system configuration directory (Linux)</td>
+                            <td>Read sensitive configuration files</td>
+                        </tr>
+                        <tr>
+                            <td><code>C:/Windows/System32</code></td>
+                            <td>Access Windows system directory</td>
+                            <td>Overwrite system files</td>
+                        </tr>
+                        <tr>
+                            <td><code>src/main/resources/templates</code></td>
+                            <td>Access application templates</td>
+                            <td>Modify application views</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Upload File with Path Traversal</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/fileupload/path-traversal/upload}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="customPath" class="form-label">Custom Upload Path:</label>
+                        <input type="text" class="form-control" id="customPath" name="customPath" 
+                               placeholder="Enter custom path (e.g., uploads, ../config, C:/temp)">
+                        <div class="form-text text-danger">
+                            Vulnerable: This input allows path traversal attacks using "../" sequences
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File:</label>
+                        <input type="file" class="form-control" id="file" name="file" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-danger">Upload to Custom Path</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a th:href="@{/fileupload/vulnerable}" class="btn btn-outline-secondary">Back to Vulnerable Upload</a>
+            <a th:href="@{/fileupload/safe}" class="btn btn-outline-primary">Try Safe Upload</a>
+        </div>
+    </div>
+</body>
+</html> 
